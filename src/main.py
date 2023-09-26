@@ -1,32 +1,18 @@
 from math import sqrt
+from file_utils import leer_archivo
 
-def main():
+class Sucursal:
+    def __init__(self, numero,  ubicacion, demanda): 
+        self.numero = numero
+        self.ubicacion = ubicacion
+        self.demanda = demanda
 
-    file = open("../primer_problema.txt", "r")
-    numeros, demandas, coordenadas = leer_archivo(file)
+class Camion:
+    def __init__(self, ubicacion, capacidad):
+        self.ubicacion = ubicacion 
+        self.capacidad = capacidad
 
-    sucursales_visitadas = []
-    recorrido = 0
-    
-    sucursales = []
-
-    for i in range(150):
-        sucursal = Sucursal(numeros[i], coordenadas[i], demandas[i])
-        sucursales.append(sucursal)
-
-    for coordenada in coordenadas:
-        print(f"Intentando con {coordenada}...")
-        camion = Camion(coordenada, 30)
-
-        aux_sucursales = sucursales.copy()
-
-        sucursales_visitadas, recorrido = intentar_ahre(aux_sucursales, camion)  
-
-        if len(sucursales_visitadas) == 150:
-            print(f"Solución encontrada: {recorrido}!")
-            print(f"Sucursales visitadas {len(sucursales_visitadas)} y recorrido {recorrido}!")
-
-def intentar_ahre(sucursales, camion):
+def calcular_recorrido(sucursales, camion):
     sucursales_visitadas = []
     recorrido = 0
 
@@ -41,54 +27,10 @@ def intentar_ahre(sucursales, camion):
         camion.capacidad += sucursal.demanda
 
         sucursales.remove(sucursal)
-        sucursales_visitadas.append(sucursal)
+        sucursales_visitadas.append(sucursal.numero)
         recorrido += distancia
 
     return sucursales_visitadas, recorrido
-
-def leer_archivo(file):
-    numeros = []
-    demandas = []
-    coordenadas = []
-
-    line = siguiente_linea(file)
-
-    while(line != ""):
-     
-        if line == "DEMANDAS":
-            line = siguiente_linea(file)
-
-            while(line != "FIN DEMANDAS"):
-
-                splitted_line = line.split()
-                demanda = int(splitted_line[1])
-
-                demandas.append(demanda)
-
-                line = siguiente_linea(file)
-
-        if line == "NODE_COORD_SECTION":
-            line = siguiente_linea(file)
-
-            while(line != "EOF"):
-
-                splitted_line = line.split()
-                
-                coordenada = [
-                    float(splitted_line[1]),
-                    float(splitted_line[2]),
-                ]
-
-                numeros.append(int(splitted_line[0]))
-                coordenadas.append(coordenada)
-
-                line = siguiente_linea(file)
-
-        line = siguiente_linea(file)
-    
-    file.close()
-
-    return numeros, demandas, coordenadas
 
 def calcular_mas_cercano(camion, candidatos):
     if len(candidatos) == 0:
@@ -117,21 +59,6 @@ def calcular_candidatos(camion, sucursales):
         
     return candidatos
     
-
-def siguiente_linea(file):
-    return file.readline().strip()
-
-class Sucursal:
-    def __init__(self, numero,  ubicacion, demanda): 
-        self.numero = numero
-        self.ubicacion = ubicacion
-        self.demanda = demanda
-
-class Camion:
-    def __init__(self, ubicacion, capacidad):
-        self.ubicacion = ubicacion 
-        self.capacidad = capacidad
-
 def calcular_distancia(camion, sucursal):
     c_pos = camion.ubicacion
     s_pos = sucursal.ubicacion
@@ -141,6 +68,28 @@ def calcular_distancia(camion, sucursal):
 
     return sqrt(x + y)
 
+def main():
+    file = open("../primer_problema.txt", "r")
+    numeros, demandas, coordenadas = leer_archivo(file)
+
+    sucursales = []
+    sucursales_visitadas = []
+    recorrido = 0
+
+    for i in range(150):
+        sucursal = Sucursal(numeros[i], coordenadas[i], demandas[i])
+        sucursales.append(sucursal)
+
+    for coordenada in coordenadas:
+        camion = Camion(coordenada, 30)
+
+        aux_sucursales = sucursales.copy()
+        sucursales_visitadas, recorrido = calcular_recorrido(sucursales.copy(), camion)  
+
+        if len(sucursales_visitadas) == 150:
+            print(f"Solución encontrada!")
+            print(f"Sucursales visitadas {len(sucursales_visitadas)} y recorrido {recorrido}!")
+            print(sucursales_visitadas)
 
 if __name__=="__main__":
     main()
