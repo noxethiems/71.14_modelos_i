@@ -1,4 +1,5 @@
 from math import sqrt
+import random
 from file_utils import leer_archivo
 
 class Sucursal:
@@ -8,20 +9,22 @@ class Sucursal:
         self.demanda = demanda
 
 class Camion:
-    def __init__(self, ubicacion, capacidad):
+    def __init__(self, ubicacion, capacidad_max):
         self.ubicacion = ubicacion 
-        self.capacidad = capacidad
+        self.capacidad_max = capacidad_max
+        self.capacidad = 0
 
 def calcular_recorrido(sucursales, camion):
     sucursales_visitadas = []
     recorrido = 0
 
     while(sucursales):
-        cantidatos = calcular_candidatos(camion, sucursales)
-        sucursal, distancia = calcular_mas_cercano(camion, cantidatos)
+        candidatos = calcular_candidatos(camion, sucursales)
 
-        if sucursal == None:
+        if len(candidatos) == 0:
             break
+
+        sucursal, distancia = calcular_mas_cercano(camion, candidatos)
 
         camion.ubicacion = sucursal.ubicacion
         camion.capacidad += sucursal.demanda
@@ -54,7 +57,7 @@ def calcular_candidatos(camion, sucursales):
     for sucursal in sucursales:
         posible_capacidad = camion.capacidad + sucursal.demanda
          
-        if 0 <= posible_capacidad <= 30:
+        if 0 <= posible_capacidad <= camion.capacidad_max:
             candidatos.append(sucursal)
         
     return candidatos
@@ -70,26 +73,32 @@ def calcular_distancia(camion, sucursal):
 
 def main():
     file = open("../primer_problema.txt", "r")
-    numeros, demandas, coordenadas = leer_archivo(file)
 
     sucursales = []
     sucursales_visitadas = []
-    recorrido = 0
+    
+    numeros, demandas, coordenadas = leer_archivo(file)
 
     for i in range(150):
         sucursal = Sucursal(numeros[i], coordenadas[i], demandas[i])
         sucursales.append(sucursal)
+    
+    menor_recorrido = 1_000_000
+    menor_camino= []
+    
+    for sucursal in sucursales:
 
-    for coordenada in coordenadas:
-        camion = Camion(coordenada, 30)
-
-        aux_sucursales = sucursales.copy()
+        camion = Camion(sucursal.ubicacion, 30)
         sucursales_visitadas, recorrido = calcular_recorrido(sucursales.copy(), camion)  
 
         if len(sucursales_visitadas) == 150:
-            print(f"Solución encontrada!")
-            print(f"Sucursales visitadas {len(sucursales_visitadas)} y recorrido {recorrido}!")
-            print(sucursales_visitadas)
+            if recorrido < menor_recorrido:
+                menor_recorrido = recorrido
+                menor_camino = sucursales_visitadas
+            
+    print("Mejor solución encontrada")
+    print(f"Distancia recorrida: {menor_recorrido}!")
+    print(f"Camino: {menor_camino}")
 
 if __name__=="__main__":
     main()
