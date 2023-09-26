@@ -3,10 +3,55 @@ from math import sqrt
 def main():
 
     file = open("../primer_problema.txt", "r")
-    line = siguiente_linea(file)
+    numeros, demandas, coordenadas = leer_archivo(file)
 
+    sucursales_visitadas = []
+    recorrido = 0
+    
+    sucursales = []
+
+    for i in range(150):
+        sucursal = Sucursal(numeros[i], coordenadas[i], demandas[i])
+        sucursales.append(sucursal)
+
+    for coordenada in coordenadas:
+        print(f"Intentando con {coordenada}...")
+        camion = Camion(coordenada, 30)
+
+        aux_sucursales = sucursales.copy()
+
+        sucursales_visitadas, recorrido = intentar_ahre(aux_sucursales, camion)  
+
+        if len(sucursales_visitadas) == 150:
+            print(f"Solución encontrada: {recorrido}!")
+            print(f"Sucursales visitadas {len(sucursales_visitadas)} y recorrido {recorrido}!")
+
+def intentar_ahre(sucursales, camion):
+    sucursales_visitadas = []
+    recorrido = 0
+
+    while(sucursales):
+        cantidatos = calcular_candidatos(camion, sucursales)
+        sucursal, distancia = calcular_mas_cercano(camion, cantidatos)
+
+        if sucursal == None:
+            break
+
+        camion.ubicacion = sucursal.ubicacion
+        camion.capacidad += sucursal.demanda
+
+        sucursales.remove(sucursal)
+        sucursales_visitadas.append(sucursal)
+        recorrido += distancia
+
+    return sucursales_visitadas, recorrido
+
+def leer_archivo(file):
+    numeros = []
     demandas = []
     coordenadas = []
+
+    line = siguiente_linea(file)
 
     while(line != ""):
      
@@ -28,11 +73,13 @@ def main():
             while(line != "EOF"):
 
                 splitted_line = line.split()
+                
                 coordenada = [
                     float(splitted_line[1]),
                     float(splitted_line[2]),
                 ]
 
+                numeros.append(int(splitted_line[0]))
                 coordenadas.append(coordenada)
 
                 line = siguiente_linea(file)
@@ -41,31 +88,12 @@ def main():
     
     file.close()
 
-    sucursales = []
-    camion = Camion([0,0], 30)
-    
-    largo = len(coordenadas)
-
-    for i in range(largo):
-        sucursal = Sucursal(coordenadas[i], demandas[i])
-        sucursales.append(sucursal)
-
-    recorrido = 0
-
-    while(len(sucursales) > 0):
-        cantidatos = calcular_candidatos(camion, sucursales)
-        sucursal, distancia = calcular_mas_cercano(camion, cantidatos)
-        
-        camion.ubicacion = sucursal.ubicacion
-        camion.capacidad += sucursal.demanda
-
-        sucursales.remove(sucursal)
-        recorrido += distancia
-
-    print(recorrido)
-
+    return numeros, demandas, coordenadas
 
 def calcular_mas_cercano(camion, candidatos):
+    if len(candidatos) == 0:
+        return None, None
+    
     sucursal_cercana = candidatos[0]
     distancia = calcular_distancia(camion, sucursal_cercana)
 
@@ -85,7 +113,6 @@ def calcular_candidatos(camion, sucursales):
         posible_capacidad = camion.capacidad + sucursal.demanda
          
         if 0 <= posible_capacidad <= 30:
-            print("posible")
             candidatos.append(sucursal)
         
     return candidatos
@@ -95,7 +122,8 @@ def siguiente_linea(file):
     return file.readline().strip()
 
 class Sucursal:
-    def __init__(self, ubicacion, demanda): 
+    def __init__(self, numero,  ubicacion, demanda): 
+        self.numero = numero
         self.ubicacion = ubicacion
         self.demanda = demanda
 
