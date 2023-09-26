@@ -16,26 +16,14 @@ Seguido de NNN (cantidad de sucursales) renglones con la forma
 N D
 donde N es el número de sucursal y D su demanda (con signo '-' en caso de entregar dinero)
 Finaliza con una lí "FIN DEMANDAS"
-EDGE_WEIGHT_TYPE : XXX
-EUC_2D
-Luego un renglón NODE_COORD_SECTION
-Seguido de NNN (cantidad de sucursales) renglones con la forma
-N X Y
-donde N es el número de sucursal y X,Y su ubicación
-Finaliza con un renglón "EOF"
-La distancia entre las sucursales i y j es sqrt((Xi-Xj)^2+(Yi-Yj)^2)
-Formato del archivo de la solución
-Sucursales según orden de visita separando por espacio
-Ej: 11 32 22 1 33 ...
-Entregas
-El force push sobre el repo github implica la desaprobación de todo el TP
+- Impresión del problema
+Me costó mucho encontrar una mejor solución que esta. No fue largo de codear pero sentí que no tenía el modelo que optimizar mejor.
 
-Subir la mejor solución posible
-
-En el repo github creen un archivo "entrega_N.txt" (N: nombre del problema), CADA ENTREGA debe contener
-
-- Impresión del problema. Les parece fácil, difícil, largo, corto, cambios en relación a la entrega anterior, lo asocian a otro problema, comentarios, etc.
 - Ideas de como lo van a intentar resolver
+Lo que hice fue encontrar candidatos posibles y luego elegir el más cercano. Inicié el problema desde distintas sucursales con el camión vacío.
+
 - Comentarios sobre los cambios que hagan en el código a medida que intentan mejorar el resultado. Comentar y explicar los diferentes intentos que van haciendo, incluir pros y contras esperados/encontrados
+Al principio tuve un bug donde iniciaba el camión lleno por error, cuando lo que quería indicar era la capacidad máxima y no la capacidad en el momento dado.
+
 - Comentarios finales de la entrega
-    
+Una disculpa por la demora, me había confundido la fecha de la entrega, erróneamente creí que era la semana que viene.
