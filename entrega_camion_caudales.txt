@@ -1,1 +1,16 @@
+# 71.14_modelos_i
+
+Impresión del problema
+Me costó mucho encontrar una mejor solución que esta. No fue largo de codear pero sentí que no tenía el modelo que optimizar mejor.
+
+Ideas de como lo van a intentar resolver
+Lo que hice fue encontrar candidatos posibles y luego elegir el más cercano. Inicié el problema desde distintas sucursales con el camión vacío.
+
+Comentarios sobre los cambios
+Al principio tuve un bug donde iniciaba el camión lleno por error, cuando lo que quería indicar era la capacidad máxima y no la capacidad en el momento dado.
+
+Comentarios finales
+Una disculpa por la demora, me había confundido la fecha de la entrega, erróneamente creí que era la semana que viene.
+
+Solución encontrada
 11 36 61 127 69 24 118 53 40 139 120 47 110 81 86 135 70 137 132 65 55 58 141 25 20 51 138 46 90 92 54 134 109 43 67 32 23 38 131 77 122 14 80 15 78 59 16 133 111 105 33 93 35 96 89 8 84 7 30 63 48 73 76 34 98 1 87 103 107 95 82 5 100 97 143 124 126 52 121 79 88 94 10 113 3 62 125 149 22 104 115 150 44 71 45 128 68 119 91 106 13 74 123 31 27 129 144 147 72 49 145 112 136 64 21 4 41 57 39 130 148 17 66 60 140 117 101 116 12 42 9 28 6 37 2 19 99 114 102 108 85 142 18 75 83 56 26 146 50 29
