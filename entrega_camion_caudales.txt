@@ -1,16 +1,65 @@
-# 71.14_modelos_i
+/--------------------------------------------------------------------------------------------/
+71.14 MODELOS Y OPTIMIZACIÓN I 
+Curso: Oitana, Diego Martín
 
-Impresión del problema
-Me costó mucho encontrar una mejor solución que esta. No fue largo de codear pero sentí que no tenía el modelo que optimizar mejor.
 
-Ideas de como lo van a intentar resolver
-Lo que hice fue encontrar candidatos posibles y luego elegir el más cercano. Inicié el problema desde distintas sucursales con el camión vacío.
+/--------------------------------------------------------------------------------------------/
+PROBLEMA
 
-Comentarios sobre los cambios
-Al principio tuve un bug donde iniciaba el camión lleno por error, cuando lo que quería indicar era la capacidad máxima y no la capacidad en el momento dado.
+Es un problema del viajante con capacidad, pero con una dimensión mucho mayor.
 
-Comentarios finales
-Una disculpa por la demora, me había confundido la fecha de la entrega, erróneamente creí que era la semana que viene.
+En el primer problema se presentaban 150 sucursales con un camión de capacidad 30.
+En el segundo problema se presenan 18512 sucursales con un camión de capacidad 100.
 
-Solución encontrada
-11 36 61 127 69 24 118 53 40 139 120 47 110 81 86 135 70 137 132 65 55 58 141 25 20 51 138 46 90 92 54 134 109 43 67 32 23 38 131 77 122 14 80 15 78 59 16 133 111 105 33 93 35 96 89 8 84 7 30 63 48 73 76 34 98 1 87 103 107 95 82 5 100 97 143 124 126 52 121 79 88 94 10 113 3 62 125 149 22 104 115 150 44 71 45 128 68 119 91 106 13 74 123 31 27 129 144 147 72 49 145 112 136 64 21 4 41 57 39 130 148 17 66 60 140 117 101 116 12 42 9 28 6 37 2 19 99 114 102 108 85 142 18 75 83 56 26 146 50 29
+esto limita muchísimo la performance del programa porque las posibles combinaciones de rutas 
+es de 18512! contando aquellas que son incompatibles, es decir, aquellas que no cumplen con la
+condición de capacidad máxima del camión.
+
+
+/--------------------------------------------------------------------------------------------/
+IMPLEMENTACIÓN DE LA SOLUCIÓN
+
+El algoritmo cuenta de los siguientes pasos: primero, encontrar sucursales candidatas, que son
+aquellas que cumplen con la condición de capacidad; segundo, de las sucursales candidatas se
+elige el más cercano; tercero, se agrega la distancia que hay entre la sucursal y el camión;
+cuarto, se remueve la sucursal de la lista de sucursales; y sexto, se repiten los pasos hasta
+que se hayan visitado todas las sucursales.
+
+Además, este algoritmo se inicia tomando distintas sucursales como punto de partida. Es decir
+que para terminar debería ejecutarse 18512 veces. Esto tarda muchísimo tiempo y va a depender
+de la capacidad de procesamiento de la computadora (en la mía nunca terminó).
+
+
+/--------------------------------------------------------------------------------------------/
+COMENTARIOS ACERCA DE LOS CAMBIOS
+
+Al principio tuve un bug donde iniciaba el camión lleno por error, cuando lo que quería 
+indicar era la capacidad máxima y no la capacidad en el momento dado. Fue un cambio menor.
+
+El programa puede correr durante horas en esta segunda versión, por lo que intenté mejorar 
+el performance cambiando algunas las siguientes cosas:
+- No utilizar la raíz cuadrada en cada medición de la distancia.
+- Buscar la mínima distancia comparando el radio de cercanía con el camión.
+
+Spoiler: No hubo gran mejoría en el performance y, además, se obtenían soluciones en el orden
+de gasto de 1.000.000, debido a que "estar dentro del radio" es una condición más laxa que la 
+de "sucursal más cercana".
+
+
+/--------------------------------------------------------------------------------------------/
+CONCLUSIÓN
+
+Es posible tener una solución suficientemente buena en un tiempo razonable, pero tener la 
+solución óptima necesita de muchísimo tiempo de procesamiento y hay que considerar que este
+programa podría no arrojar la solución óptima ya que es posible que no sea el método de 
+resolución más eficiente al problema del viajante.
+
+Habiendo corrido el programa durante una hora se obtiene como mejor solución la aquí adjuntada
+con un gasto de 936.985. 
+
+Cabe mencionar que corriendo el programa unos minutos se obtiene una solución con un gasto de 
+939.747, lo cual es muy cercana a la solución anterior y quizás no vale la pena esperar tanto
+tiempo por la diferencia de 2.762, pero siempre dependerá del contexto del problema.
+
+
+/--------------------------------------------------------------------------------------------/
