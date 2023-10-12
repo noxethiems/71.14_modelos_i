@@ -1,6 +1,6 @@
 from math import sqrt
 import random
-from file_utils import leer_archivo
+from utils import guardar_solucion, leer_archivo
 
 class Sucursal:
     def __init__(self, numero,  ubicacion, demanda): 
@@ -14,7 +14,7 @@ class Camion:
         self.capacidad_max = capacidad_max
         self.capacidad = 0
 
-def calcular_recorrido(sucursales, camion):
+def calcular_recorrido(sucursales, camion, primera_sucursal, menor_recorrido):
     sucursales_visitadas = []
     recorrido = 0
 
@@ -33,6 +33,14 @@ def calcular_recorrido(sucursales, camion):
         sucursales_visitadas.append(sucursal.numero)
         recorrido += distancia
 
+        if recorrido > menor_recorrido:
+            return None, None
+
+    sucursal, distancia = calcular_mas_cercano(camion, [primera_sucursal])
+    recorrido += distancia
+
+    print(f"Recorrido: {round(recorrido)}")
+
     return sucursales_visitadas, recorrido
 
 def calcular_mas_cercano(camion, candidatos):
@@ -49,7 +57,29 @@ def calcular_mas_cercano(camion, candidatos):
             sucursal_cercana = candidato
             distancia = nueva_distancia
 
-    return sucursal_cercana, distancia
+    return sucursal_cercana, sqrt(distancia)
+
+# def calcular_mas_cercano(camion, candidatos):
+#     if len(candidatos) == 0:
+#         return None, None
+    
+#     [camion_x, camion_y]= camion.ubicacion
+#     radio = 1
+
+#     while True:
+
+#         for candidato in candidatos:
+#             candidato_x, candidato_y = candidato.ubicacion
+
+#             in_range_x = (camion_x - radio) <= candidato_x <= (camion_x + radio)
+#             in_range_y = (camion_y - radio) <= candidato_y <= (camion_y + radio)
+
+#             if in_range_x and in_range_y:
+#                 distancia = calcular_distancia(camion, candidato)
+
+#                 return candidato, sqrt(distancia)
+            
+#         radio*=2
 
 def calcular_candidatos(camion, sucursales):
     candidatos = []
@@ -69,32 +99,46 @@ def calcular_distancia(camion, sucursal):
     x = (c_pos[0] - s_pos[0]) ** 2
     y = (c_pos[1] - s_pos[1]) ** 2
 
-    return sqrt(x + y)
+    return (x + y)
 
 def main():
-    file = open("../primer_problema.txt", "r")
+    file = open("../segundo_problema.txt", "r")
+    res = leer_archivo(file)
+
+    demandas = res[0]
+    coordenadas = res[1]
+    capacidad = res[2]
+    dimension = res[3]
 
     sucursales = []
     sucursales_visitadas = []
-    
-    numeros, demandas, coordenadas = leer_archivo(file)
 
-    for i in range(150):
-        sucursal = Sucursal(numeros[i], coordenadas[i], demandas[i])
+    for i in range(dimension):
+        sucursal = Sucursal(i + 1, coordenadas[i], demandas[i])
         sucursales.append(sucursal)
     
-    menor_recorrido = 1_000_000
+    menor_recorrido = 100_000_000
     menor_camino= []
-    
+
+    # random.shuffle(sucursales)
+
     for sucursal in sucursales:
 
-        camion = Camion(sucursal.ubicacion, 30)
-        sucursales_visitadas, recorrido = calcular_recorrido(sucursales.copy(), camion)  
+        primera_sucursal = sucursal
 
-        if len(sucursales_visitadas) == 150:
+        camion = Camion(sucursal.ubicacion, capacidad)
+        sucursales_visitadas, recorrido = calcular_recorrido(sucursales.copy(), camion, primera_sucursal, menor_recorrido)
+
+        if sucursales_visitadas == None:
+            continue  
+
+        if len(sucursales_visitadas) == dimension:
+
             if recorrido < menor_recorrido:
                 menor_recorrido = recorrido
                 menor_camino = sucursales_visitadas
+
+                guardar_solucion(sucursales_visitadas, recorrido)
             
     print("Mejor solución encontrada")
     print(f"Distancia recorrida: {menor_recorrido}!")

@@ -2,15 +2,26 @@ def siguiente_linea(file):
     return file.readline().strip()
 
 def leer_archivo(file):
-    numeros = []
+    
     demandas = []
     coordenadas = []
+
+    capacidad = 0
+    dimension = 0
 
     line = siguiente_linea(file)
 
     while(line != ""):
-     
-        if line == "DEMANDAS":
+
+        if "CAPACIDAD" in line:
+            splitted_line = line.split()
+            capacidad = int(splitted_line[1])
+
+        elif "DIMENSION" in line:
+            splitted_line = line.split()
+            dimension = int(splitted_line[1])
+
+        elif line == "DEMANDAS":
             line = siguiente_linea(file)
 
             while(line != "FIN DEMANDAS"):
@@ -22,7 +33,7 @@ def leer_archivo(file):
 
                 line = siguiente_linea(file)
 
-        if line == "NODE_COORD_SECTION":
+        elif line == "NODE_COORD_SECTION":
             line = siguiente_linea(file)
 
             while(line != "EOF"):
@@ -34,7 +45,6 @@ def leer_archivo(file):
                     float(splitted_line[2]),
                 ]
 
-                numeros.append(int(splitted_line[0]))
                 coordenadas.append(coordenada)
 
                 line = siguiente_linea(file)
@@ -43,4 +53,9 @@ def leer_archivo(file):
     
     file.close()
 
-    return numeros, demandas, coordenadas
+    return demandas, coordenadas, capacidad, dimension
+
+def guardar_solucion(sucursales_visitadas, recorrido):
+    file = open("../solución_2.txt", "w")
+    file.write(f"Distancia: {round(recorrido)}\n")
+    file.write(f"{sucursales_visitadas}\n")
