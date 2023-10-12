@@ -14,7 +14,7 @@ class Camion:
         self.capacidad_max = capacidad_max
         self.capacidad = 0
 
-def calcular_recorrido(sucursales, camion, primera_sucursal, menor_recorrido):
+def calcular_recorrido(sucursales, camion, primera_sucursal):
     sucursales_visitadas = []
     recorrido = 0
 
@@ -32,9 +32,6 @@ def calcular_recorrido(sucursales, camion, primera_sucursal, menor_recorrido):
         sucursales.remove(sucursal)
         sucursales_visitadas.append(sucursal.numero)
         recorrido += distancia
-
-        if recorrido > menor_recorrido:
-            return None, None
 
     sucursal, distancia = calcular_mas_cercano(camion, [primera_sucursal])
     recorrido += distancia
@@ -127,10 +124,7 @@ def main():
         primera_sucursal = sucursal
 
         camion = Camion(sucursal.ubicacion, capacidad)
-        sucursales_visitadas, recorrido = calcular_recorrido(sucursales.copy(), camion, primera_sucursal, menor_recorrido)
-
-        if sucursales_visitadas == None:
-            continue  
+        sucursales_visitadas, recorrido = calcular_recorrido(sucursales.copy(), camion, primera_sucursal)
 
         if len(sucursales_visitadas) == dimension:
 
