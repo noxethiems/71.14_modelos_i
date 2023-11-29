@@ -56,6 +56,6 @@ def leer_archivo(file):
     return demandas, coordenadas, capacidad, dimension
 
 def guardar_solucion(sucursales_visitadas, recorrido):
-    file = open("../solución_2.txt", "w")
+    file = open("../soluciones/solución_3.txt", "w")
     file.write(f"Distancia: {round(recorrido)}\n")
     file.write(f"{sucursales_visitadas}\n")
